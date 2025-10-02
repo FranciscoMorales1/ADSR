@@ -10,11 +10,17 @@ Símbolos: `ε` = cadena vacía, `$` = fin de entrada.
 
 ### 0) Gramática **original**
 S → A B C
+
 S → D E
+
 A → dos B tres | ε
+
 B → B cuatro C cinco | ε
+
 C → seis A B | ε
+
 D → uno A E | B
+
 E → tres
 
 markdown
