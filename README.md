@@ -200,9 +200,13 @@ ASDR **con retroceso**.
 
 ### 0) Gramática **original**
 S → A B C
+
 S → S uno
+
 A → dos B C | ε
+
 B → C tres | ε
+
 C → cuatro B | ε
 
 markdown
