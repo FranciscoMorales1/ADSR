@@ -135,8 +135,11 @@ ASDR **con retroceso** (no predictivo).
 
 ### 0) Gramática **original**
 S → B uno | dos C | ε
+
 A → S tres B C | cuatro | ε
+
 B → A cinco C seis | ε
+
 C → siete B | ε
 
 markdown
