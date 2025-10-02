@@ -1,20 +1,25 @@
-Introducción
+📘 README.md
+# Ejercicios de Gramáticas y Parsers
 
-Este documento resuelve los tres ejercicios de gramáticas propuestos.
+Este repositorio contiene la resolución de tres ejercicios de gramáticas con sus respectivos analizadores sintácticos descendentes recursivos (ASDR).  
+
+## 📌 Introducción
 Cada ejercicio incluye:
+- Eliminación de recursividad por la izquierda (si aplica).
+- Conjuntos **PRIMEROS** y **SIGUIENTES**.
+- Conjuntos de **PREDICCIÓN**.
+- Verificación de si la gramática es **LL(1)**.
+- Implementación de un **ASDR**:
+  - Con **retroceso** si la gramática no es LL(1).
+  - Predictivo si la gramática sí es LL(1).
 
-Eliminación de recursividad por la izquierda (si aplica).
+---
 
-Cálculo de los conjuntos de PRIMEROS y SIGUIENTES.
+## 📘 Ejercicio 1
 
-Cálculo de los conjuntos de PREDICCIÓN.
+### Gramática
 
-Determinación de si la gramática es LL(1).
 
-Definición del tipo de parser a usar (predictivo o con retroceso).
-
-Ejercicio 1
-Gramática
 S → A B C | D E
 A → dos B tres | ε
 B → B cuatro C cinco | ε
@@ -22,15 +27,18 @@ C → seis A B | ε
 D → uno A E | B
 E → tres
 
-a) Eliminación de recursividad por la izquierda
 
-B → B cuatro C cinco | ε tiene recursividad por la izquierda.
-Se reescribe como:
+### Eliminación de recursividad
+`B` es recursiva por la izquierda:
+
 
 B → ε B'
 B' → cuatro C cinco B' | ε
 
-b) Conjuntos PRIMEROS
+
+### PRIMEROS
+
+
 FIRST(S) = { dos, seis, uno, tres, cuatro, ε }
 FIRST(A) = { dos, ε }
 FIRST(B) = { cuatro, ε }
@@ -38,112 +46,139 @@ FIRST(C) = { seis, ε }
 FIRST(D) = { uno, dos, tres, seis, cuatro, ε }
 FIRST(E) = { tres }
 
-c) Conjuntos SIGUIENTES
+
+### SIGUIENTES
+
+
 FOLLOW(S) = { $ }
-FOLLOW(A) = { dos, seis, tres, cuatro, ε }
+FOLLOW(A) = { dos, seis, tres, cuatro }
 FOLLOW(B) = { cuatro, seis, tres, $ }
 FOLLOW(C) = { cinco, $ }
 FOLLOW(D) = { tres }
 FOLLOW(E) = { $ }
 
-d) Conjuntos de predicción
 
-Cada producción genera PRED según FIRST y FOLLOW.
-(Ejemplo: S → A B C → { dos, seis, cuatro, tres, ε }).
+### LL(1)
+❌ **No es LL(1)**.  
+Se requieren retrocesos.
 
-e) ¿Es LL(1)?
+### Tipo de parser
+👉 **ASDR con retroceso**.
 
-No es LL(1), porque hay conflictos entre las producciones de S y D.
+---
 
-f) Tipo de parser
+## 📘 Ejercicio 2
 
-👉 Se debe usar ASDR con retroceso.
+### Gramática
 
-Ejercicio 2
-Gramática
+
 S → B uno | dos C | ε
 A → S tres B C | cuatro | ε
 B → A cinco C seis | ε
 C → siete B | ε
 
-a) Conjuntos PRIMEROS
+
+### PRIMEROS
+
+
 FIRST(S) = { dos, uno, tres, cuatro, cinco, ε }
 FIRST(A) = { cuatro, dos, uno, tres, cinco, ε }
 FIRST(B) = { cuatro, dos, uno, tres, cinco, ε }
 FIRST(C) = { siete, ε }
 
-b) Conjuntos SIGUIENTES
+
+### SIGUIENTES
+
+
 FOLLOW(S) = { $, tres }
 FOLLOW(A) = { cinco }
 FOLLOW(B) = { uno, siete, seis, tres, cinco, $ }
 FOLLOW(C) = { $, cinco, seis, tres }
 
-c) Conjuntos de predicción
-S → B uno      : { cuatro, dos, uno, tres, cinco }
-S → dos C      : { dos }
-S → ε          : { $, tres }
 
-A → S tres B C : { cuatro, dos, uno, tres, cinco }
-A → cuatro     : { cuatro }
-A → ε          : { cinco }
+### Predicción
 
-B → A cinco C seis : { cuatro, dos, uno, tres, cinco }
-B → ε               : { uno, siete, seis, tres, cinco, $ }
 
-C → siete B : { siete }
-C → ε       : { $, cinco, seis, tres }
+S → B uno : { cuatro, dos, uno, tres, cinco }
+S → dos C : { dos }
+S → ε : { $, tres }
+...
 
-d) ¿Es LL(1)?
 
-No es LL(1). Hay colisiones (dos, tres, cuatro aparecen en varias predicciones).
+### LL(1)
+❌ **No es LL(1)**.  
+Existen colisiones.
 
-e) Tipo de parser
+### Tipo de parser
+👉 **ASDR con retroceso**.
 
-👉 Se debe usar ASDR con retroceso.
+---
 
-Ejercicio 3
-Gramática
+## 📘 Ejercicio 3
+
+### Gramática
+
+
 S → A B C | S uno
 A → dos B C | ε
 B → C tres | ε
 C → cuatro B | ε
 
-a) Eliminación de recursividad por la izquierda
 
-S → S uno es recursiva por la izquierda.
-Reescribimos:
+### Eliminación de recursividad
+`S → S uno` se reescribe:
+
 
 S → A B C S'
 S' → uno S' | ε
 
-b) Conjuntos PRIMEROS
+
+### PRIMEROS
+
+
 FIRST(S) = { dos, cuatro, ε }
 FIRST(A) = { dos, ε }
 FIRST(B) = { cuatro, ε }
 FIRST(C) = { cuatro, ε }
 
-c) Conjuntos SIGUIENTES
+
+### SIGUIENTES
+
+
 FOLLOW(S) = { $ }
 FOLLOW(A) = { cuatro, $ }
 FOLLOW(B) = { tres, $ }
 FOLLOW(C) = { cuatro, tres, $ }
 
-d) Conjuntos de predicción
 
-Con la gramática transformada no hay colisiones.
+### LL(1)
+✅ **Sí es LL(1)** después de la transformación.
 
-e) ¿Es LL(1)?
+### Tipo de parser
+👉 **ASDR predictivo (sin retroceso)**.
 
-✅ Sí es LL(1) después de eliminar recursividad.
+---
 
-f) Tipo de parser
+## 📜 Resumen de Parsers
+- **Ejercicio 1** → ASDR con retroceso.  
+- **Ejercicio 2** → ASDR con retroceso.  
+- **Ejercicio 3** → ASDR predictivo.  
 
-👉 Se puede usar ASDR predictivo (sin retroceso).
+---
 
-📌 Resumen de tipos de parser
+## ▶️ Cómo probar
+Cada parser se encuentra en un archivo separado en Python.  
+Ejemplo de uso:
 
-Ejercicio 1 → ASDR con retroceso.
+```bash
+python parser_ej1.py
 
-Ejercicio 2 → ASDR con retroceso.
 
-Ejercicio 3 → ASDR predictivo (LL(1) válido).
+Salida:
+
+Cadena aceptada ✓
+
+
+o
+
+Error de sintaxis en <token>
